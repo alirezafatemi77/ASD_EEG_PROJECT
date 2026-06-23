@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Weights & Biases local run cache (incl. offline runs awaiting `wandb sync`)
+wandb/
