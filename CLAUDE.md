@@ -102,4 +102,16 @@ Stage 3 also writes per-file `desc-iclabel_components.tsv` alongside the clean `
 
 ## GCS
 
-Bucket: `asd-eeg-dataset`. If `google-cloud-storage` is not installed or auth fails, GCS features are silently skipped. GCS-staged inputs are cached in `/tmp` and deleted after use.
+All GCS reading and writing goes through the shared `gcs_io.GCSStore` (in `gcs_io.py`),
+configured once there — bucket (`asd-eeg-dataset`), dataset id, retry policy, chunk size,
+and cache dir. Notebooks just do `store = gcs_io.GCSStore()` and call its methods:
+
+- `store.upload(path, deriv_root, pipeline)` / `store.upload_tree(deriv_root, pipeline, pattern)` — write derivatives (skips blobs whose size already matches)
+- `store.list_files(pipeline, suffix, tasks=...)` — discover a stage's outputs
+- `store.staged(blob_name)` — contextmanager that downloads to the cache and deletes after
+- `GCSStore.pair_files(primary, secondary, key_fn)` — match raw↔ICA across stages (Stage 3)
+
+The client is created lazily, so importing never fails when `google-cloud-storage` is
+missing or the environment is unauthenticated; `gcs_io.HAS_GCS` reports availability.
+Auth: `gcloud auth application-default login` (or `GOOGLE_APPLICATION_CREDENTIALS`).
+Stage 1 still reads raw input from OpenNeuro **S3** (boto3) — that is a separate source.
