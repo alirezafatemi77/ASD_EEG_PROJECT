@@ -76,7 +76,12 @@ All outputs are written under `~/asd_eeg_pipeline/`:
 ```bash
 pip install mne mne-bids mne-icalabel pandas numpy joblib tqdm \
             python-picard boto3 google-cloud-storage pyprep onnxruntime
+pip install -e .          # makes the `asd_eeg` package importable from notebooks/
 ```
+
+Reusable code lives in the `asd_eeg` package (`asd_eeg/infra/` holds the GCS and W&B
+helpers); the stage notebooks live in `notebooks/` and import them via
+`from asd_eeg import gcs_io` / `from asd_eeg import wandb_tracking as wbt`.
 
 Optionally authenticate with GCS if using cloud I/O:
 

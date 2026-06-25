@@ -36,11 +36,30 @@ OpenNeuro S3 (raw BIDS)
 
 **Critical ordering constraint in Stage 3:** Stage 1 raw must be average-referenced *before* applying Stage 2's ICA — the reference must match what Stage 2 was fit on.
 
+## Repository Layout
+
+```
+asd_eeg/                 # installable package — all reusable code
+  infra/                 #   external services & run plumbing
+    gcs_io.py            #     GCS I/O (GCSStore)
+    wandb_tracking.py    #     W&B experiment tracking
+  metrics/               #   FUTURE: QC / quality metric functions
+  plotting/              #   FUTURE: reusable figure builders
+  utils/                 #   FUTURE: generic helpers (paths, BIDS parsing)
+notebooks/               # the four stage notebooks (00–03) + qc_ica_quality
+pyproject.toml           # declares the package; enables `pip install -e .`
+```
+
+Notebooks import reusable code via the package: `from asd_eeg import gcs_io` /
+`from asd_eeg import wandb_tracking as wbt`. The editable install (below) makes
+`asd_eeg` importable from the `notebooks/` working directory.
+
 ## Setup
 
 ```bash
 pip install mne mne-bids mne-icalabel pandas numpy joblib tqdm \
             python-picard boto3 google-cloud-storage pyprep onnxruntime wandb
+pip install -e .          # makes the `asd_eeg` package importable from notebooks/
 ```
 
 For GCS access:
@@ -50,8 +69,8 @@ gcloud auth application-default login
 
 ## Experiment Tracking (Weights & Biases)
 
-All four notebooks log to W&B through the shared `wandb_tracking.py` module, which is the
-single source of truth for the schema (so stages can't drift apart). One **run per
+All four notebooks log to W&B through the shared `asd_eeg/infra/wandb_tracking.py` module,
+which is the single source of truth for the schema (so stages can't drift apart). One **run per
 stage-batch execution**: run `config` = that stage's hyperparameters, per-file `result`
 dicts become a `wandb.Table`, and aggregate stats become summary scalars + histograms.
 
@@ -102,9 +121,10 @@ Stage 3 also writes per-file `desc-iclabel_components.tsv` alongside the clean `
 
 ## GCS
 
-All GCS reading and writing goes through the shared `gcs_io.GCSStore` (in `gcs_io.py`),
-configured once there — bucket (`asd-eeg-dataset`), dataset id, retry policy, chunk size,
-and cache dir. Notebooks just do `store = gcs_io.GCSStore()` and call its methods:
+All GCS reading and writing goes through the shared `gcs_io.GCSStore` (in
+`asd_eeg/infra/gcs_io.py`), configured once there — bucket (`asd-eeg-dataset`), dataset id,
+retry policy, chunk size, and cache dir. Notebooks do `from asd_eeg import gcs_io` then
+`store = gcs_io.GCSStore()` and call its methods:
 
 - `store.upload(path, deriv_root, pipeline)` / `store.upload_tree(deriv_root, pipeline, pattern)` — write derivatives (skips blobs whose size already matches)
 - `store.list_files(pipeline, suffix, tasks=...)` — discover a stage's outputs

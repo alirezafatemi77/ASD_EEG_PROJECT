@@ -5,5 +5,10 @@
 __pycache__/
 *.pyc
 
+# Editable-install / build artifacts
+*.egg-info/
+build/
+dist/
+
 # Weights & Biases local run cache (incl. offline runs awaiting `wandb sync`)
 wandb/

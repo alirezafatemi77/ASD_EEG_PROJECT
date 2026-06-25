@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "asd_eeg"
+version = "0.1.0"
+description = "EEG preprocessing pipeline for OpenNeuro ds006780 (ASD)."
+requires-python = ">=3.9"
+dependencies = [
+    "mne",
+    "mne-bids",
+    "mne-icalabel",
+    "pandas",
+    "numpy",
+    "joblib",
+    "tqdm",
+    "python-picard",
+    "boto3",
+    "google-cloud-storage",
+    "pyprep",
+    "onnxruntime",
+    "wandb",
+]
+
+[tool.setuptools.packages.find]
+include = ["asd_eeg*"]
