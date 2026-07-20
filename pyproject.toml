@@ -12,6 +12,7 @@ dependencies = [
     "mne-bids",
     "mne-icalabel",
     "pandas",
+    "openpyxl",
     "numpy",
     "joblib",
     "tqdm",

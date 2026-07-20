@@ -12,3 +12,7 @@ dist/
 
 # Weights & Biases local run cache (incl. offline runs awaiting `wandb sync`)
 wandb/
+
+# Regenerable exports from the data-understanding notebook
+participants_sample.xlsx
+participants_sample.csv

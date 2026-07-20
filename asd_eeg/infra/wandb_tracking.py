@@ -55,13 +55,14 @@ WANDB_PROJECT = 'asd-eeg-ds006780'
 DATASET_ID = 'ds006780'
 
 # One job_type per pipeline stage. Keyed by stage number for convenience.
-# (Key 4 is reserved for the planned Stage 4 epoching; the standalone ICA
-#  quality-control workflow uses the string key 'qc' so it never collides.)
+# (The standalone ICA quality-control workflow uses the string key 'qc' so it
+#  never collides with the numbered stages.)
 JOB_TYPES = {
     0: 'stage0-eda',
     1: 'stage1-preproc',
     2: 'stage2-ica-fit',
     3: 'stage3-ica-apply',
+    4: 'stage4-epoch',
     'qc': 'qc-ica',
 }
 

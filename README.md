@@ -36,6 +36,7 @@ ASD_EEG_PROJECT/
 │   ├── 01_preprocessing_pre_ica_v2.ipynb
 │   ├── 02_ica_fit_local_v2.ipynb
 │   ├── 03_ica_apply.ipynb
+│   ├── 04_epoching.ipynb
 │   └── qc_ica_quality.ipynb
 │
 ├── CLAUDE.md
@@ -78,6 +79,15 @@ Apply ICA
 desc-clean_eeg.fif
     │
     ▼
+Stage 4
+Per-task epoching
+Restingstate → fixed-length
+FAST / IC / motor → event-related (from annotations)
+    │
+    ▼
+desc-epo.fif
+    │
+    ▼
 ICA Quality Control
 Quantitative metrics
 Visual inspection
@@ -95,6 +105,7 @@ QC report
 | `01_preprocessing_pre_ica_v2.ipynb` | Filtering, resampling, bad-channel detection, interpolation |
 | `02_ica_fit_local_v2.ipynb`         | Average referencing and ICA decomposition                   |
 | `03_ica_apply.ipynb`                | ICLabel-based artifact rejection and ICA application        |
+| `04_epoching.ipynb`                 | Per-task epoching (fixed-length / event-related) → `desc-epo.fif` |
 | `qc_ica_quality.ipynb`              | Quantitative and visual ICA quality control                 |
 
 ---
@@ -159,6 +170,7 @@ derivatives/
 ├── mne-preproc-pre-ica/
 ├── mne-ica-fit/
 ├── mne-ica-apply/
+├── mne-epochs/
 ├── qc-ica/
 └── logs/
 ```
@@ -204,7 +216,8 @@ Run the notebooks in order:
 1. `01_preprocessing_pre_ica_v2.ipynb`
 2. `02_ica_fit_local_v2.ipynb`
 3. `03_ica_apply.ipynb`
-4. `qc_ica_quality.ipynb`
+4. `04_epoching.ipynb`
+5. `qc_ica_quality.ipynb`
 
 Run each notebook's smoke-test section on a single recording before processing the full dataset.
 

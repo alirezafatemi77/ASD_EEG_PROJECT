@@ -45,6 +45,14 @@ _STAGE3_OK19_ORDER = [
     'timestamp',
 ]
 STAGE3_LOG_COLUMNS = _STAGE3_OK19_ORDER[:-1] + ['out', 'error', 'timestamp']
+# Stage 4 epoching writes a fixed-schema log from the first row, so it is never
+# ragged; this entry is for read_stage_log's fast path + schema consistency.
+STAGE4_LOG_COLUMNS = [
+    'timestamp', 'subject', 'task', 'run', 'status', 'epoch_mode', 'n_epochs',
+    'epoch_duration_s', 'tmin', 'tmax', 'n_event_types', 'event_types', 'sfreq',
+    'n_channels', 'mean_p2p_uv', 'max_p2p_uv', 'total_duration_s', 'epochs_path',
+    'epochs_gcs', 'warning', 'error',
+]
 
 # Per-stage positional order of each historical `ok`-row width seen on disk.
 # Verified against the actual logs; widths not listed fall back to end-anchoring.
@@ -61,11 +69,15 @@ _STAGE2_OK_ORDERS = {
 _STAGE3_OK_ORDERS = {
     19: _STAGE3_OK19_ORDER,                                   # legacy apply schema
 }
+_STAGE4_OK_ORDERS = {
+    len(STAGE4_LOG_COLUMNS): STAGE4_LOG_COLUMNS,              # current (only) schema
+}
 
 _STAGES = {
     1: (STAGE1_LOG_COLUMNS, _STAGE1_OK_ORDERS),
     2: (STAGE2_LOG_COLUMNS, _STAGE2_OK_ORDERS),
     3: (STAGE3_LOG_COLUMNS, _STAGE3_OK_ORDERS),
+    4: (STAGE4_LOG_COLUMNS, _STAGE4_OK_ORDERS),
 }
 
 
@@ -78,8 +90,10 @@ def _infer_stage(path: Path) -> int:
         return 2
     if name.startswith('03'):
         return 3
+    if name.startswith('04'):
+        return 4
     raise ValueError(
-        f"Cannot infer stage from {name!r}; pass stage=1, 2 or 3 explicitly."
+        f"Cannot infer stage from {name!r}; pass stage=1, 2, 3 or 4 explicitly."
     )
 
 
