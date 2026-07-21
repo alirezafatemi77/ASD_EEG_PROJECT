@@ -46,58 +46,10 @@ ASD_EEG_PROJECT/
 
 ---
 
-# Pipeline
-
-```text
-Raw EEG
-    │
-    ▼
-Stage 1
-Filtering
-Resampling
-Bad-channel detection
-Interpolation
-    │
-    ▼
-desc-preproc_eeg.fif
-    │
-    ▼
-Stage 2
-Average reference
-ICA decomposition
-    │
-    ▼
-desc-preproc_ica.fif
-    │
-    ▼
-Stage 3
-ICLabel
-Artifact component rejection
-Apply ICA
-    │
-    ▼
-desc-clean_eeg.fif
-    │
-    ▼
-Stage 4
-Per-task epoching
-Restingstate → fixed-length
-FAST / IC / motor → event-related (from annotations)
-    │
-    ▼
-desc-epo.fif
-    │
-    ▼
-ICA Quality Control
-Quantitative metrics
-Visual inspection
-W&B logging
-QC report
-```
 
 ---
 
-# Planned Downstream Analysis
+# Planned pipline
 
 > **Status: design only — not implemented in this repository.** Everything below sits
 > downstream of `desc-epo.fif` and is recorded here to document the design space and the
