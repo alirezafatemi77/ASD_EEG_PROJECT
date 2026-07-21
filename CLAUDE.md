@@ -61,9 +61,10 @@ Notebooks import reusable code via the package: `from asd_eeg import gcs_io` /
 by `asd_eeg/__init__.py`). The editable install (below) makes `asd_eeg` importable
 from the `notebooks/` working directory.
 
-**Canonical notebooks live in `notebooks/`.** A stray `01_preprocessing_pre_ica_v2.ipynb`
-may exist at the repo root (an untracked working copy) — treat `notebooks/` as the source of
-truth and don't edit the root duplicate.
+**Canonical notebooks live in `notebooks/` — there are no notebooks at the repo root.**
+If a stage notebook reappears at the root, it is a stale copy from before the package
+reorganization (it will use flat imports like `import wandb_tracking`, which no longer
+resolve). Delete it rather than editing it.
 
 ## Setup
 
