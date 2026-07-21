@@ -13,6 +13,9 @@ dist/
 # Weights & Biases local run cache (incl. offline runs awaiting `wandb sync`)
 wandb/
 
+# Local Claude Code guidance — kept out of the published repo
+CLAUDE.md
+
 # Regenerable exports from the data-understanding notebook
 participants_sample.xlsx
 participants_sample.csv
