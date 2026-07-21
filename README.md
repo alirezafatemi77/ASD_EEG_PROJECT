@@ -97,6 +97,30 @@ QC report
 
 ---
 
+# Planned Downstream Analysis
+
+> **Status: design only — not implemented in this repository.** Everything below sits
+> downstream of `desc-epo.fif` and is recorded here to document the design space and the
+> choices made within it. The repository currently ends at Stage 4 (epoching) + ICA QC.
+
+The intended downstream analysis builds per-subject connectivity graphs from the epoched
+data and classifies them with a graph neural network. The diagram shows the main path
+(solid) alongside the alternatives considered at each decision point (dashed), with the
+central ablation — hand-crafted vs. foundation-model node features — highlighted.
+
+![Downstream analysis design space, showing the main path and the alternatives at each fork](figures/downstream_design_space.png)
+
+Two dependencies on the preprocessing stages are worth stating explicitly:
+
+* **Band coverage is capped by Stage 1.** `TASK_CONFIG` lowpasses non-motor tasks at 40 Hz,
+  so a γ band for `Restingstate` / `FAST` / `IC` would span only 30–40 Hz, against the filter
+  rolloff. Full-γ analysis requires either restricting γ to `motor` or re-running Stage 1
+  with a higher lowpass.
+* **`autoreject` is not in the current pipeline.** Stage 3 performs ICA/ICLabel rejection
+  only, and Stage 4 deliberately applies no epoch rejection (`GLOBAL_REJECT = None`).
+
+---
+
 # Notebooks
 
 | Notebook                            | Purpose                                                     |
